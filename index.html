@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSC Intake Forms · Raven Outlier</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0B0E;--ink2:#111318;--ink3:#181A21;--ink4:#1F2129;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#E4E5EC;--muted:#5C5E6A;--label:#8A8C99;
+  --orange:#E8460A;--orange2:#FF5920;--blue:#4A7EC8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;}
+body{background:var(--ink);color:var(--text);font-family:'Barlow',sans-serif;padding:40px 24px;display:flex;flex-direction:column;align-items:center;}
+body::after{content:'';position:fixed;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+
+.wrap{max-width:760px;width:100%;padding-top:60px;}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:56px;display:flex;align-items:center;gap:12px;justify-content:center;}
+.logo::before,.logo::after{content:'';height:1px;width:40px;background:var(--border2);}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;text-align:center;}
+.title{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,64px);font-weight:900;line-height:.95;margin-bottom:28px;letter-spacing:-.02em;text-align:center;}
+.title em{color:var(--orange);font-style:italic;}
+.sub{font-family:'Barlow',sans-serif;font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 64px;line-height:1.7;text-align:center;}
+
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:48px;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+
+.card{background:var(--ink3);border:1px solid var(--border);border-radius:8px;padding:32px 28px;text-decoration:none;color:var(--text);transition:all .25s;display:flex;flex-direction:column;}
+.card:hover{border-color:var(--orange);transform:translateY(-2px);}
+.card-tag{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.card-tag.client{color:var(--blue);}
+.card-tag.customer{color:var(--orange);}
+.card-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;line-height:1.15;margin-bottom:10px;}
+.card-desc{font-size:13px;color:var(--label);line-height:1.65;margin-bottom:24px;flex:1;}
+.card-cta{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);}
+.card-cta::after{content:' →';transition:transform .2s;display:inline-block;}
+.card:hover .card-cta::after{transform:translateX(4px);}
+
+.footer{font-size:11px;color:var(--muted);letter-spacing:.05em;text-align:center;padding-top:32px;border-top:1px solid var(--border);width:100%;max-width:760px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="logo">Raven Outlier · Car Stereo Chick</div>
+  <div class="eyebrow">Intake Forms</div>
+  <h1 class="title">Tell us about<br>the <em>build.</em></h1>
+  <p class="sub">Two forms power every video. Annie fills hers when the build is booked. The customer fills theirs once they agree to be in the video. Each one builds the script before the car arrives.</p>
+
+  <div class="cards">
+
+    <a href="client-intake.html" class="card">
+      <div class="card-tag client">For Annie</div>
+      <div class="card-title">Client Intake</div>
+      <div class="card-desc">Pre-production brief. Picks Vlog Style or Review/How-To at the top. Walks through every section in video order — hook, cold open, products, install, reveal, outro. Progress auto-saves for 30 days.</div>
+      <div class="card-cta">Open client form</div>
+    </a>
+
+    <a href="customer-intake.html" class="card">
+      <div class="card-tag customer">For the Customer</div>
+      <div class="card-title">Customer Intake</div>
+      <div class="card-desc">The story behind the car. What this build means, why now, what they're chasing. Sensory questions branch based on what they're getting done. About 3-5 minutes. Progress auto-saves for 30 days.</div>
+      <div class="card-cta">Open customer form</div>
+    </a>
+
+  </div>
+
+</div>
+
+<div class="footer">Sounds Incredible Mobile · Brookfield, CT · carstereochick.com</div>
+
+</body>
+</html>

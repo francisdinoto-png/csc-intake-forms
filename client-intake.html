@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Stereo Chick · Pre-Production Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0B0E;--ink2:#111318;--ink3:#181A21;--ink4:#1F2129;--ink5:#262830;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#E4E5EC;--muted:#5C5E6A;--label:#8A8C99;
+  --orange:#E8460A;--orange2:#FF5920;--amber:#F0A500;
+  --green:#3A7A35;--green2:#4E9E47;--blue:#4A7EC8;--purple:#9B6DD9;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--ink);color:var(--text);font-family:'Barlow',sans-serif;overflow:hidden;}
+body::after{content:'';position:fixed;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .5s;}
+.screen.visible{opacity:1;pointer-events:all;}
+
+/* ── WELCOME ── */
+#welcome{background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:40px 24px;overflow-y:auto;}
+.wl-logo{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:48px;display:flex;align-items:center;gap:12px;}
+.wl-logo::before,.wl-logo::after{content:'';height:1px;width:40px;background:var(--border2);}
+.wl-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;}
+.wl-title{font-family:'Playfair Display',serif;font-size:clamp(36px,6.5vw,64px);font-weight:900;line-height:.95;margin-bottom:24px;letter-spacing:-.02em;max-width:760px;}
+.wl-title em{color:var(--orange);font-style:italic;}
+.wl-sub{font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 16px;line-height:1.75;}
+.wl-promise{display:inline-flex;align-items:center;gap:8px;background:rgba(232,70,10,.08);border:1px solid rgba(232,70,10,.18);border-radius:4px;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:40px;}
+.wl-steps{display:flex;gap:24px;margin-bottom:44px;flex-wrap:wrap;justify-content:center;max-width:680px;}
+.wl-step{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:140px;}
+.wl-step-num{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--label);}
+.wl-step-text{font-size:11px;color:var(--muted);text-align:center;line-height:1.5;}
+.wl-btn{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--orange);color:#fff;border:none;border-radius:4px;padding:16px 44px;cursor:pointer;transition:all .2s;}
+.wl-btn:hover{background:var(--orange2);transform:translateY(-2px);}
+.wl-resume{display:none;margin-top:18px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.wl-resume.show{display:block;}
+.wl-resume button{background:none;border:none;color:var(--orange);font-family:inherit;font-size:inherit;letter-spacing:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0 4px;}
+.wl-resume button:hover{color:var(--orange2);}
+.wl-footer{margin-top:48px;font-size:11px;color:var(--muted);letter-spacing:.05em;}
+
+/* ── QUESTION SCREEN ── */
+#qscreen{background:var(--ink);flex-direction:column;}
+.topbar{flex-shrink:0;display:flex;align-items:center;padding:16px 28px;border-bottom:1px solid var(--border);gap:16px;}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.topbar-prog{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.prog-segs{display:flex;gap:2px;width:100%;max-width:520px;}
+.prog-seg{flex:1;height:2px;background:var(--ink5);border-radius:2px;transition:background .4s;}
+.prog-seg.done{background:var(--orange);}
+.prog-seg.cur{background:rgba(232,70,10,.4);}
+.prog-meta{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+.topbar-time{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);text-align:right;white-space:nowrap;}
+.topbar-save{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;color:var(--green2);text-transform:uppercase;opacity:0;transition:opacity .3s;}
+.topbar-save.show{opacity:1;}
+
+.q-area{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow-y:auto;}
+.q-card{width:100%;max-width:720px;animation:qIn .4s ease both;}
+@keyframes qIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.q-tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;padding:3px 8px;border-radius:3px;display:inline-block;}
+.tag-start{background:rgba(74,126,200,.12);color:var(--blue);}
+.tag-hook{background:rgba(232,70,10,.12);color:var(--orange);}
+.tag-cold{background:rgba(155,109,217,.12);color:var(--purple);}
+.tag-car{background:rgba(232,70,10,.12);color:var(--orange);}
+.tag-brief{background:rgba(74,126,200,.12);color:var(--blue);}
+.tag-products{background:rgba(240,165,0,.12);color:var(--amber);}
+.tag-challenge{background:rgba(155,109,217,.12);color:var(--purple);}
+.tag-install{background:rgba(78,158,71,.12);color:var(--green2);}
+.tag-reveal{background:rgba(232,70,10,.12);color:var(--orange);}
+.tag-outro{background:rgba(74,126,200,.12);color:var(--blue);}
+.tag-question{background:rgba(232,70,10,.12);color:var(--orange);}
+.tag-product{background:rgba(240,165,0,.12);color:var(--amber);}
+.tag-test{background:rgba(74,126,200,.12);color:var(--blue);}
+.tag-expect{background:rgba(155,109,217,.12);color:var(--purple);}
+.tag-verdict{background:rgba(78,158,71,.12);color:var(--green2);}
+.tag-compare{background:rgba(240,165,0,.12);color:var(--amber);}
+.tag-mistakes{background:rgba(232,70,10,.12);color:var(--orange);}
+
+.q-num{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.q-text{font-family:'Playfair Display',serif;font-size:clamp(20px,3.2vw,30px);font-weight:700;line-height:1.25;margin-bottom:14px;color:var(--text);}
+.q-hint{font-size:13.5px;color:var(--muted);margin-bottom:22px;line-height:1.75;max-width:620px;}
+.q-hint em{color:var(--label);font-style:italic;}
+
+.a-textarea{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.65;padding:8px 0 12px;resize:none;outline:none;min-height:90px;max-height:320px;transition:border-color .2s;}
+.a-textarea:focus{border-bottom-color:var(--orange);}
+.a-textarea::placeholder{color:var(--muted);}
+.a-input{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Barlow',sans-serif;font-size:17px;padding:8px 0 12px;outline:none;transition:border-color .2s;}
+.a-input:focus{border-bottom-color:var(--orange);}
+.a-input::placeholder{color:var(--muted);}
+.a-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.a-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:520px){.a-grid2,.a-grid3{grid-template-columns:1fr;}}
+.a-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* CHOICE CARDS */
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+@media(max-width:540px){.choice-grid{grid-template-columns:1fr;}}
+.choice-item{display:flex;flex-direction:column;gap:6px;background:var(--ink3);border:1px solid var(--border);border-radius:6px;padding:18px 20px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none;}
+.choice-item:hover{border-color:rgba(232,70,10,.3);}
+.choice-item.on{border-color:var(--orange);background:rgba(232,70,10,.06);}
+.choice-item input{display:none;}
+.choice-title{font-size:15px;font-weight:600;color:var(--text);line-height:1.3;}
+.choice-sub{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* PILLS (yes/no, etc) */
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;background:var(--ink3);border:1px solid var(--border2);border-radius:20px;padding:9px 18px;cursor:pointer;transition:all .2s;color:var(--label);user-select:none;}
+.pill:hover{border-color:rgba(232,70,10,.4);color:var(--text);}
+.pill.on{background:rgba(232,70,10,.1);border-color:var(--orange);color:var(--orange);}
+
+.q-actions{display:flex;align-items:center;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-continue{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;background:var(--orange);color:#fff;border:none;border-radius:4px;padding:13px 26px;cursor:pointer;transition:all .2s;}
+.btn-continue:hover{background:var(--orange2);transform:translateY(-1px);}
+.btn-back{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--border2);color:var(--muted);cursor:pointer;padding:11px 18px;border-radius:4px;transition:all .2s;}
+.btn-back:hover{color:var(--label);border-color:var(--label);}
+.btn-skip{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;transition:color .2s;}
+.btn-skip:hover{color:var(--label);}
+.enter-hint{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:auto;}
+
+/* ── DONE ── */
+#donescreen{background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:40px 24px;}
+.done-mark{width:80px;height:80px;border-radius:50%;border:2px solid var(--orange);background:rgba(232,70,10,.12);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 32px;animation:popIn .5s ease both .2s;opacity:0;}
+@keyframes popIn{from{opacity:0;transform:scale(.6);}to{opacity:1;transform:scale(1);}}
+.done-title{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,64px);font-weight:900;line-height:.95;margin-bottom:16px;}
+.done-title em{color:var(--orange);font-style:italic;}
+.done-sub{font-size:14px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.75;}
+.done-cta{margin-top:28px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- ── WELCOME SCREEN ── -->
+<div class="screen visible" id="welcome">
+  <div class="wl-logo">Raven Outlier · Car Stereo Chick</div>
+  <div class="wl-eyebrow">Pre-Production Brief · Internal</div>
+  <div class="wl-title">Tell us about the<br>next <em>build.</em></div>
+  <div class="wl-sub">Fill this out when a build is booked. Your answers shape the script before the car arrives — the hook, the story, the products, the install plan, the reveal. The more you give, the less back-and-forth later.</div>
+  <div class="wl-promise">⏱ About 18 minutes for a vlog, 14 for a review</div>
+  <div class="wl-steps">
+    <div class="wl-step">
+      <div class="wl-step-num">1</div>
+      <div class="wl-step-text">Pick the video format</div>
+    </div>
+    <div class="wl-step">
+      <div class="wl-step-num">2</div>
+      <div class="wl-step-text">Walk through the sections in video order</div>
+    </div>
+    <div class="wl-step">
+      <div class="wl-step-num">3</div>
+      <div class="wl-step-text">Progress auto-saves for 30 days</div>
+    </div>
+    <div class="wl-step">
+      <div class="wl-step-num">4</div>
+      <div class="wl-step-text">Hit send when you're done</div>
+    </div>
+  </div>
+  <button class="wl-btn" onclick="startIntake()">Start brief →</button>
+  <div class="wl-resume" id="resumePrompt">
+    Found a saved draft from <span id="resumeWhen"></span>.
+    <button onclick="resumeIntake()">Resume</button>
+    or
+    <button onclick="discardSaved()">start fresh</button>
+  </div>
+  <div class="wl-footer">Raven Outlier Production · ravenoutlier.com</div>
+</div>
+
+<!-- ── QUESTION SCREEN ── -->
+<div class="screen" id="qscreen">
+  <div class="topbar">
+    <div class="topbar-brand">Pre-Production Brief</div>
+    <div class="topbar-prog">
+      <div class="prog-segs" id="progSegs"></div>
+      <div class="prog-meta" id="progMeta">Question 1</div>
+    </div>
+    <div class="topbar-save" id="saveIndicator">✓ Saved</div>
+    <div class="topbar-time" id="timeLeft"></div>
+  </div>
+  <div class="q-area">
+    <div class="q-card" id="qCard"></div>
+  </div>
+</div>
+
+<!-- ── DONE SCREEN ── -->
+<div class="screen" id="donescreen">
+  <div class="done-mark" style="color:var(--orange);">✓</div>
+  <div class="wl-eyebrow">Brief submitted</div>
+  <div class="done-title">On to <em>the build.</em></div>
+  <div class="done-sub">Your brief landed in the production sheet, saved under the video name you gave. It'll be the foundation for the rough script — pulled section-by-section in the order you filled it out.</div>
+  <div class="done-cta">Raven Outlier Production</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════
+const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwN3EpUwQpMpByvBM98BLttHX3PmhnfCJFTY7MaFTa3tfDrHlAF0o71G3n2sTlKw_Vl/exec';
+const STORAGE_KEY = 'csc_client_intake_v2';
+const STORAGE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+// ════════════════════════════════════════════
+// QUESTIONS — branching by video format
+// ════════════════════════════════════════════
+
+// SHARED START — 4 questions both paths see
+const SHARED_START = [
+  { id:'video_name', tag:'start', tagLabel:'Start here · §1',
+    text:"What's this video called?",
+    hint:"This names the tab in the production sheet. Use a clean, recognizable name — vehicle and brief description works (e.g. \"2026 Audi RS3 Audio Upgrade\" or \"Stinger Horizon 10 Review\").",
+    type:'input', fieldId:'video_name', placeholder:'e.g. 1998 Porsche 993 Audio Upgrade', required:true },
+
+  { id:'format', tag:'start', tagLabel:'Start here · §1',
+    text:"Which video format is this?",
+    hint:"Picks the path through the rest of the form.",
+    type:'choices', fieldId:'video_format', required:true,
+    options:[
+      { value:'vlog', title:'Vlog Style', sub:'Full build with a client story, multi-day install, 15-25 min runtime' },
+      { value:'review', title:'Product Review / How-To', sub:'Focused on a product or technique, no client story needed, tighter format' }
+    ] },
+
+  { id:'install_dates', tag:'start', tagLabel:'Start here · §1',
+    text:"When's the install happening?",
+    hint:"Roughly fine — we'll lock dates closer to the build.",
+    type:'grid2',
+    fields:[
+      { id:'install_start', label:'Start date', type:'input', placeholder:'e.g. Apr 13, 2026' },
+      { id:'install_end',   label:'End date (or single day)', type:'input', placeholder:'e.g. Apr 17, 2026' }
+    ] },
+];
+
+// VLOG PATH — questions in video order
+const VLOG_QUESTIONS = [
+
+  // ── HOOK ──
+  { id:'hook', tag:'hook', tagLabel:'The hook · §2',
+    text:"What's the hook? The cliffhanger line that opens the video.",
+    hint:"The single sentence — or two — that makes someone stop scrolling. Pull the same energy as past hooks:<br><br>"
+       + "<em>RS3: \"8 days. Multiple error codes. Cutting up the rear shelf of a brand new vehicle. And an SFD2 coding session that looked like it might have bricked our client's car.\"</em><br>"
+       + "<em>993: \"Blood. Sweat. And tears. Well — not actual tears. But close.\"</em><br><br>"
+       + "What's the dramatic premise of THIS build? What are the stakes? Did the client almost give up on the car? Did you have to break a rule you don't normally break? Did something go wrong on Day 1 that defined the rest of the build?",
+    type:'textarea', fieldId:'hook', minHeight:140,
+    placeholder:'Write it like you\'d say it on camera — the line that opens the video.' },
+
+  // ── COLD OPEN ──
+  { id:'client_context', tag:'cold', tagLabel:'Cold open · §3',
+    text:"Who is the client + how long have they been a client?",
+    hint:"First name, how long they've been coming to the shop, anything notable about your history with them. \"Paul, a long time client of ours\" was enough for the RS3 — but if there's more context (a referral, a previous build, a complicated history), put it here.",
+    type:'textarea', fieldId:'client_context', minHeight:100,
+    placeholder:'e.g. Paul — long-time client, third build with us. Brought us his GT3 two years ago and his wife\'s S5 last year.' },
+
+  { id:'car_role', tag:'cold', tagLabel:'Cold open · §3',
+    text:"What's this car to them — daily driver, weekend toy, collector piece, recent purchase?",
+    hint:"The RS3 was Paul's daily — 30,000 miles a year. The 993 was Howard's weekend collector piece that lived at his CT house. The car's role in their life sets the emotional stakes.<br><br>Daily / weekend / collector? Recent purchase or owned for years? How many miles per year? Any context about how they actually use it.",
+    type:'textarea', fieldId:'car_role', minHeight:100,
+    placeholder:'e.g. Daily driver. 30k miles a year. He bought it new in 2026 and has been struggling with the factory audio since day one.' },
+
+  { id:'client_said', tag:'cold', tagLabel:'Cold open · §3',
+    text:"What did they say about the factory audio? Their exact words if you can.",
+    hint:"Their actual phrasing carries the cold open.<br><br>"
+       + "<em>Paul said: \"I might as well put my old Walkman on.\" That line ran the segment.</em><br>"
+       + "<em>Howard said Porsche clients want \"an upgrade without hacking up his classic Porsche\" — which became the rule for the whole build.</em><br><br>"
+       + "What did THIS client say? What was their complaint, in their voice? Even if it's just a sentence — capture it.",
+    type:'textarea', fieldId:'client_said', minHeight:120,
+    placeholder:'Their exact words. Quote them directly if you can.' },
+
+  // ── THE CAR ──
+  { id:'vehicle', tag:'car', tagLabel:'The car · §4',
+    text:"Year / Make / Model / Trim / Color",
+    hint:"The basics — for the title card, the lower-thirds, and the script header.",
+    type:'grid2',
+    fields:[
+      { id:'year',  label:'Year',  type:'input', placeholder:'1998' },
+      { id:'make',  label:'Make',  type:'input', placeholder:'Porsche' },
+      { id:'model', label:'Model + Trim', type:'input', placeholder:'993 Carrera S' },
+      { id:'color', label:'Color', type:'input', placeholder:'Guards Red' }
+    ] },
+
+  { id:'vehicle_special', tag:'car', tagLabel:'The car · §4',
+    text:"What makes this car worth talking about — as an enthusiast?",
+    hint:"Pull the same angle as your other scripts.<br><br>"
+       + "<em>RS3: \"Audi's hottest sedan. 2.5-liter, 5-cylinder turbocharged. 394 horsepower. The suspension is tight and smooth. You feel connected to the road without feeling every imperfection.\"</em><br>"
+       + "<em>993: \"The last air-cooled 911. For a lot of people in the Porsche world, this is the one.\"</em><br><br>"
+       + "Walk us through what makes it noteworthy: engine, drivetrain, history, what era, what it represents, why enthusiasts care. Don't be brief — the more you give, the more enthusiast credibility the video earns.",
+    type:'textarea', fieldId:'vehicle_special', minHeight:140,
+    placeholder:'Engine, drivetrain, history, what era, what it represents, what enthusiasts know about this exact car...' },
+
+  { id:'factory_audio', tag:'car', tagLabel:'The car · §4',
+    text:"What's the factory audio situation?",
+    hint:"Speaker count, brand if it's a premium package (SONOS in the RS3, the unknown two-config setup in the 993), what's degraded, what's been hacked, what's surprising about it. Anything you already know about how this car's audio is typically configured at this age.",
+    type:'textarea', fieldId:'factory_audio', minHeight:120,
+    placeholder:'e.g. 16-speaker SONOS premium package. Everything\'s in the front. No real rear fill. Heavy DSP processing that we\'ll have to bypass...' },
+
+  // ── CLIENT BRIEF ──
+  { id:'client_wants', tag:'brief', tagLabel:'Client brief · §5',
+    text:"What does the client actually want — beyond \"better sound\"?",
+    hint:"This is the emotional translation, not the spec list.<br><br>"
+       + "<em>Paul wanted \"enveloping, immersive sound\" — to \"turn it up and tune everything else out.\" That's not \"more bass\" — that's the feeling of music in the car.</em><br>"
+       + "<em>Howard wanted \"an upgrade without hacking up his classic Porsche\" — that's not a spec, that's a value system.</em><br><br>"
+       + "Translate THIS client's goal into a feeling. What's the experience they're chasing?",
+    type:'textarea', fieldId:'client_wants', minHeight:120,
+    placeholder:'The feeling, not the specs. What experience are they chasing?' },
+
+  { id:'client_stakes', tag:'brief', tagLabel:'Client brief · §5',
+    text:"What's the emotional stakes?",
+    hint:"Did they almost give up on the car? <em>(Paul on the RS3.)</em> Are they nervous about modifying a collector piece? <em>(Howard on the 993.)</em> Have they been burned by a previous install? Is this a milestone — a graduation, retirement, a long-saved-for purchase?<br><br>Why does THIS build matter more than a normal job — from the client's side?",
+    type:'textarea', fieldId:'client_stakes', minHeight:100,
+    placeholder:'Why does this build matter more than a normal job?' },
+
+  // ── PRODUCTS + PLAN ──
+  { id:'products_list', tag:'products', tagLabel:'Products + the plan · §6',
+    text:"Products going in — one per line, with model numbers.",
+    hint:"Be complete. Head unit, amp, DSP, every speaker, harness, accessories. Each line gets a beauty shot in the edit.",
+    type:'textarea', fieldId:'products_list', minHeight:160,
+    placeholder:'NAV TV Zen V (NTV-KIT860)\nHelix V Eighteen DSP\nSony XS-690ES 6x9 (rear shelf)\nDynamat sound dampening\n...' },
+
+  { id:'products_why', tag:'products', tagLabel:'Products + the plan · §6',
+    text:"For each major product — why this one, why for this car, why for this client?",
+    hint:"Walk through the logic per piece, like the RS3 script:<br><br>"
+       + "<em>\"Why the NAV TV Zen V? Right now the biggest bottleneck is the SONOS amplifier…\"</em><br>"
+       + "<em>\"That is why we will be using the Helix V Eighteen DSP — 18 channels may sound excessive, but this amp is designed for vehicles exactly like this.\"</em><br><br>"
+       + "Don't just say \"Helix because they're good.\" Say WHY this exact piece for this exact car for this exact client.",
+    type:'textarea', fieldId:'products_why', minHeight:200,
+    placeholder:'Walk through each major product, one at a time, with the reasoning behind the pick...' },
+
+  { id:'alternatives', tag:'products', tagLabel:'Products + the plan · §6',
+    text:"What alternatives did you pass on, and why?",
+    hint:"The PCCM you didn't pick on the 993. The off-the-shelf T-harness you didn't use on the RS3. The competing amp, the cheaper DSP, the budget speakers. Show your work — viewers want to know you actually considered the alternatives, not just defaulted to your favorite brand.",
+    type:'textarea', fieldId:'alternatives', minHeight:140,
+    placeholder:'What did you consider and pass on? Why?' },
+
+  // ── THE CHALLENGE ──
+  { id:'challenge', tag:'challenge', tagLabel:'The challenge · §7',
+    text:"What's the unique challenge of this build?",
+    hint:"This is the section that separates a normal install video from a watchable one.<br><br>"
+       + "<em>RS3: \"Before John can touch a single wire in this car — we have to do something we haven't done before and that is to bring in a coding specialist from Canada.\" (SFD2 protocol, NPG Technology.)</em><br>"
+       + "<em>993: \"There's a right way and a wrong way to upgrade audio in a classic car. On a $200,000 vehicle someone is preserving, that is not recoverable.\" (Reversibility + grille fragility + the previous bad install to undo.)</em><br><br>"
+       + "What's THIS build's specific obstacle? The thing other shops would skip, get wrong, or refuse to take on.",
+    type:'textarea', fieldId:'challenge', minHeight:160,
+    placeholder:'The thing that makes this build different from a normal install. The obstacle other shops would skip.' },
+
+  { id:'at_risk', tag:'challenge', tagLabel:'The challenge · §7',
+    text:"What's at risk if it doesn't work?",
+    hint:"Real consequences, in real terms.<br><br>"
+       + "<em>\"Could brick the car.\" (RS3)</em><br>"
+       + "<em>\"Could damage the original wiring on a 28-year-old vehicle nobody makes parts for anymore.\" (993)</em><br>"
+       + "<em>\"Could ruin the resale value.\" \"Client almost got rid of the car already and this is their last try.\"</em><br><br>"
+       + "Name the worst case. The video needs the stakes spelled out.",
+    type:'textarea', fieldId:'at_risk', minHeight:100,
+    placeholder:'What\'s the worst case if this goes sideways?' },
+
+  // ── INSTALL PLAN ──
+  { id:'install_plan', tag:'install', tagLabel:'Install plan · §8',
+    text:"Day-by-day plan — what's each day's task?",
+    hint:"Use the TASK format you use in your scripts. Be specific per day.<br><br>"
+       + "<em>RS3 example:</em><br>"
+       + "<em>Day 1 — Coding session with NPG (before any disassembly)</em><br>"
+       + "<em>Day 2 — TASK 1: Disassembly + Wire Mapping</em><br>"
+       + "<em>Day 3 — TASK 2: Rear Shelf Cut + Sound Dampening + New Speakers</em><br>"
+       + "<em>Day 4 — TASK 3: T-Harness Fabrication (196 wires soldered)</em><br>"
+       + "<em>Day 5 — TASK 4: Wiring Runs + Grounding</em><br>"
+       + "<em>Day 6 — TASK 5: Helix Amp Mounted + First Power-On</em><br>"
+       + "<em>Day 7 — TASK 6: Clearing Errors + DSP Tuning</em><br><br>"
+       + "The more detailed your day-by-day plan, the better the daily check-ins write themselves.",
+    type:'textarea', fieldId:'install_plan', minHeight:240,
+    placeholder:'Day 1 — ...\nDay 2 — TASK 1: ...\nDay 3 — TASK 2: ...\n...' },
+
+  { id:'install_tools', tag:'install', tagLabel:'Install plan · §8',
+    text:"Every named tool that'll show on camera.",
+    hint:"Specific tools you'll be using — name them. Nibbler tool. Heat gun. Test tone generator. Multi-meter. Laser cutter. Xtool. Each one is a shot in the edit.",
+    type:'textarea', fieldId:'install_tools', minHeight:100,
+    placeholder:'Nibbler tool, heat gun, multi-meter, test tone generator, laser cutter, Xtool...' },
+
+  { id:'install_hacks', tag:'install', tagLabel:'Install plan · §8',
+    text:"Every hack, tip, or trick John will show.",
+    hint:"List them out — these become How-To Tips clips and standalone social posts. Be exhaustive:<br><br>"
+       + "<em>· \"John's trick for getting these head units out without scratching the dash\"</em><br>"
+       + "<em>· \"Routing the power wire through the existing grommet\"</em><br>"
+       + "<em>· \"How to identify all 16 channels by impedance with just a test tone generator\"</em><br>"
+       + "<em>· \"Soldering with heat shrink — why it's worth the time for a reversible install\"</em><br><br>"
+       + "Each line is its own clip. Be specific.",
+    type:'textarea', fieldId:'install_hacks', minHeight:200,
+    placeholder:'One tip per line. Each becomes a 30-second standalone clip.' },
+
+  // ── REVEAL & FIRST LISTEN ──
+  { id:'reveal_plan', tag:'reveal', tagLabel:'Reveal & first listen · §9',
+    text:"Reveal plan + first song.",
+    hint:"The setup, the staging, the tuning session beforehand, who's in the car, what the camera is doing, where you're standing. And the first song — royalty-free if you'll need it in the video, customer's pick if they're on camera.",
+    type:'textarea', fieldId:'reveal_plan', minHeight:140,
+    placeholder:'Where, when, who\'s in the car, camera setup, first song...' },
+
+  { id:'reveal_reaction', tag:'reveal', tagLabel:'Reveal & first listen · §9',
+    text:"What reaction are you hoping for from the client?",
+    hint:"The 993 reveal was your solo listen — no client on camera. The RS3 reveal was Paul listening, then Annie + Paul discussing.<br><br>What's THIS reveal? Who's there, what's the moment you're chasing? Disbelief? Quiet stunned silence? \"Holy crap\"? Tears? Be specific.",
+    type:'textarea', fieldId:'reveal_reaction', minHeight:100,
+    placeholder:'The moment you\'re chasing.' },
+
+  // ── OUTRO ──
+  { id:'outro_callback', tag:'outro', tagLabel:'Outro · §10',
+    text:"Callback to the hook + lesson learned.",
+    hint:"Every Annie video closes the loop on the hook in the outro.<br><br>"
+       + "<em>RS3: \"I know I said in the beginning we almost bricked the client's vehicle and that's no joke.\" Then she explained the NPG timing detail — that if they'd waited, SFD2 coding would have been impossible because NPG lost the capability.</em><br>"
+       + "<em>993: hook was \"blood, sweat, and tears\" — outro closes with engagement CTA about PCCM vs Blaupunkt.</em><br><br>"
+       + "What's THIS video's callback? What's the lesson you want to leave viewers with?",
+    type:'textarea', fieldId:'outro_callback', minHeight:140,
+    placeholder:'The closing thought that ties back to the hook.' },
+
+  { id:'blog_cta_and_tease', tag:'outro', tagLabel:'Outro · §10',
+    text:"Blog CTA + next video tease — specific reason to click.",
+    hint:"Not \"check out the blog\" — a REAL reason.<br><br>"
+       + "<em>RS3: full diagram of the t-harness wiring.</em><br>"
+       + "<em>993: full Helix part numbers and harness diagrams.</em><br><br>"
+       + "What's THIS video's specific blog payoff? And what's the next video coming after this one — one sentence tease.",
+    type:'textarea', fieldId:'blog_cta_and_tease', minHeight:120,
+    placeholder:'Blog reason to click + one-sentence next-video tease.' },
+];
+
+// REVIEW / HOW-TO PATH
+const REVIEW_QUESTIONS = [
+
+  { id:'review_question', tag:'question', tagLabel:'The question · §2',
+    text:"What question is this video answering?",
+    hint:"One sentence. The specific thing viewers will get an answer to.<br><br>"
+       + "<em>Not: \"let's look at the Blaupunkt RCM 82DAB.\"</em><br>"
+       + "<em>Yes: \"Is the Blaupunkt RCM 82DAB worth picking over the Porsche PCCM on a classic 993?\"</em><br><br>"
+       + "The question is the title. It's what makes someone click. Be specific.",
+    type:'textarea', fieldId:'review_question', minHeight:120,
+    placeholder:'The specific question this video answers.' },
+
+  { id:'why_now', tag:'question', tagLabel:'The question · §2',
+    text:"Why are viewers asking this question right now?",
+    hint:"A new product launch? A forum debate you keep seeing? A pricing change? A common DIY mistake you've seen on Reddit? Something you keep getting asked at the counter? This establishes why the video exists now and not last year.",
+    type:'textarea', fieldId:'why_now', minHeight:100,
+    placeholder:'What\'s prompting this question right now?' },
+
+  { id:'product_being_reviewed', tag:'product', tagLabel:'The product · §3',
+    text:"What's being reviewed or demonstrated?",
+    hint:"Model, brand, price, category. If it's multiple products in a comparison, list them all.",
+    type:'textarea', fieldId:'product_being_reviewed', minHeight:100,
+    placeholder:'Model, brand, price, category. Multiple products if it\'s a comparison.' },
+
+  { id:'mfr_claim', tag:'product', tagLabel:'The product · §3',
+    text:"What does the manufacturer claim it does?",
+    hint:"Pull straight from their marketing, spec sheet, or packaging. The headline promise. The selling point. The \"this is what you're paying for\" claim.",
+    type:'textarea', fieldId:'mfr_claim', minHeight:120,
+    placeholder:'The manufacturer\'s headline promise — what they say it does.' },
+
+  { id:'hypothesis', tag:'product', tagLabel:'The product · §3',
+    text:"What's your starting hypothesis going in?",
+    hint:"Your gut take BEFORE you've tested it. Even if you suspect you're wrong. <em>\"Going in I figured this would be a downgrade from the Helix because of the price — but we'll see.\"</em> This is the setup for the \"we expected X but discovered Y\" moment in the edit.",
+    type:'textarea', fieldId:'hypothesis', minHeight:120,
+    placeholder:'Your gut take going in — even if you suspect you\'re wrong.' },
+
+  { id:'test_plan', tag:'test', tagLabel:'The test plan · §4',
+    text:"What are you planning to do on camera to test or demonstrate this?",
+    hint:"Installing it? A/B comparison against another product? Listening tests in a car? Bench tests? Measurements? Daily-use demos? Be specific about the demonstration — that's the shoot.",
+    type:'textarea', fieldId:'test_plan', minHeight:140,
+    placeholder:'The actual demonstration you\'ll film.' },
+
+  { id:'test_vehicle', tag:'test', tagLabel:'The test plan · §4',
+    text:"What vehicle / setup is the test happening in?",
+    hint:"And why this vehicle is the right test case for this product. <em>(A subwoofer test in a small cabin tests something different than one in an SUV. A radar detector test on the highway differs from city streets.)</em>",
+    type:'textarea', fieldId:'test_vehicle', minHeight:100,
+    placeholder:'Vehicle + why it\'s the right test case.' },
+
+  { id:'comparison_target', tag:'test', tagLabel:'The test plan · §4',
+    text:"What are you comparing it against?",
+    hint:"The competitor, the alternative, the version without it. Name names. <em>\"$200 Helix vs. $80 generic.\"</em> Specifics make the test credible.",
+    type:'textarea', fieldId:'comparison_target', minHeight:100,
+    placeholder:'The specific alternative(s) you\'re comparing against.' },
+
+  { id:'controlled_var', tag:'test', tagLabel:'The test plan · §4',
+    text:"What's the controlled variable?",
+    hint:"What are you keeping constant to make the comparison fair? Same source music. Same listening position. Same volume level. Same install conditions. If viewers see you compared two amps but used different music for each, the comparison falls apart.",
+    type:'textarea', fieldId:'controlled_var', minHeight:100,
+    placeholder:'What you\'re keeping constant so the comparison is fair.' },
+
+  { id:'expect_surprise', tag:'expect', tagLabel:'What you\'re expecting · §5',
+    text:"What's the moment in the test most likely to surprise you?",
+    hint:"Where's the genuine uncertainty? The part of the test where you don't know what's going to happen?",
+    type:'textarea', fieldId:'expect_surprise', minHeight:100,
+    placeholder:'The moment of genuine uncertainty.' },
+
+  { id:'hypothesis_flip', tag:'expect', tagLabel:'What you\'re expecting · §5',
+    text:"Where could your starting hypothesis flip?",
+    hint:"\"If X happens, my answer changes.\" Name the specific thing — that's the most editable moment in the video.",
+    type:'textarea', fieldId:'hypothesis_flip', minHeight:100,
+    placeholder:'The specific thing that would flip your answer.' },
+
+  { id:'might_fail', tag:'expect', tagLabel:'What you\'re expecting · §5',
+    text:"What might fail or behave differently than expected?",
+    hint:"Things you suspect won't hold up to the manufacturer's claims. Stuff that could not work the way it's advertised.",
+    type:'textarea', fieldId:'might_fail', minHeight:100,
+    placeholder:'What\'s most likely to fall short of the manufacturer\'s claim?' },
+
+  { id:'johns_reaction', tag:'expect', tagLabel:'What you\'re expecting · §5',
+    text:"What's John's likely reaction to this product?",
+    hint:"His read on it. His skepticism. His \"I told you so\" moment waiting to happen. Second perspective makes everything more watchable.",
+    type:'textarea', fieldId:'johns_reaction', minHeight:100,
+    placeholder:'John\'s gut take — what he\'s already saying about it.' },
+
+  { id:'verdict', tag:'verdict', tagLabel:'The verdict · §6',
+    text:"Your gut call right now: worth it / not worth it / worth it IF…",
+    hint:"Commit to a one-sentence answer BEFORE filming. The verdict leads the hook — videos that put the verdict in the first 20 seconds get 41% higher watch time.<br><br>If you're going to flip on the verdict during the test, that's even more interesting — but lead with where you're starting.",
+    type:'textarea', fieldId:'verdict', minHeight:120,
+    placeholder:'Worth it / not worth it / worth it IF...' },
+
+  { id:'who_for', tag:'verdict', tagLabel:'The verdict · §6',
+    text:"Who is this product/technique FOR — and who is it NOT for?",
+    hint:"Budget level, vehicle type, listener type, install experience level. The honest disqualifier matters — name the buyer who should skip this.",
+    type:'textarea', fieldId:'who_for', minHeight:120,
+    placeholder:'Specific FOR + specific NOT for.' },
+
+  { id:'verdict_flip', tag:'verdict', tagLabel:'The verdict · §6',
+    text:"What would change your answer?",
+    hint:"\"If X were different, the verdict flips.\" Names the edge case where your recommendation changes.",
+    type:'textarea', fieldId:'verdict_flip', minHeight:100,
+    placeholder:'The edge case where the recommendation flips.' },
+
+  { id:'compare_alternatives', tag:'compare', tagLabel:'The comparison · §7',
+    text:"What else is in this category + why this one wins or loses?",
+    hint:"Name the obvious alternatives, not just the abstract category. Specifics: <em>\"The binding posts are real metal, not plated plastic.\"</em> <em>\"The input gain knob has detents, the competitor's spins free.\"</em> That's the comparison viewers can use.",
+    type:'textarea', fieldId:'compare_alternatives', minHeight:160,
+    placeholder:'Named alternatives + specific reasons this wins or loses.' },
+
+  { id:'price_honest', tag:'compare', tagLabel:'The comparison · §7',
+    text:"Is the price honest for what you get?",
+    hint:"Compared to what? Be willing to say <em>\"yes, even though it's expensive\"</em> or <em>\"no, you're paying for the brand.\"</em> Honest pricing assessments build trust.",
+    type:'textarea', fieldId:'price_honest', minHeight:100,
+    placeholder:'Honest assessment of the price vs what you get.' },
+
+  { id:'common_mistakes', tag:'mistakes', tagLabel:'Common mistakes · §8',
+    text:"What do people get wrong when they try this themselves?",
+    hint:"The thing that ruins the install. The shortcut that backfires. The setting most installers leave wrong. The DIY mistake you see most often. <em>(How-to videos especially — but reviews benefit from this too.)</em>",
+    type:'textarea', fieldId:'common_mistakes', minHeight:140,
+    placeholder:'The DIY mistakes you see most often.', optional:true },
+
+  { id:'review_cta', tag:'outro', tagLabel:'CTAs · §9',
+    text:"Engagement CTA + next video tease.",
+    hint:"Specific to THIS video — not \"comment below.\" <em>\"Would you go with the Helix or the JL Audio? Why?\"</em> Then one sentence on the next video coming up.",
+    type:'textarea', fieldId:'review_cta', minHeight:120,
+    placeholder:'Specific engagement question + one-sentence next-video tease.' },
+
+  { id:'review_blog_cta', tag:'outro', tagLabel:'CTAs · §9',
+    text:"Blog CTA — specific reason to click.",
+    hint:"A real reason. <em>\"If you want the full part numbers and the wiring diagram, blog has it.\"</em> Not \"check out the blog.\"",
+    type:'textarea', fieldId:'review_blog_cta', minHeight:100,
+    placeholder:'The specific reason for viewers to click through to the blog.' },
+];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let questions = [];
+let curIdx = 0;
+let answers = {};
+let startTime = null;
+let saveTimer = null;
+
+// ════════════════════════════════════════════
+// LOCAL STORAGE (30-day progress save)
+// ════════════════════════════════════════════
+function loadSaved(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(Date.now() - (parsed.savedAt || 0) > STORAGE_MAX_AGE_MS) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch(e) { return null; }
+}
+
+function saveProgress(){
+  try {
+    const payload = {
+      answers,
+      curIdx,
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    flashSaveIndicator();
+  } catch(e) {}
+}
+
+function clearSaved(){
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
+function flashSaveIndicator(){
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ el.classList.remove('show'); }, 1500);
+}
+
+// Check for saved data on load
+function initWelcome(){
+  const saved = loadSaved();
+  if(saved && Object.keys(saved.answers || {}).length > 0){
+    const when = new Date(saved.savedAt);
+    document.getElementById('resumeWhen').textContent =
+      when.toLocaleDateString(undefined, {month:'short', day:'numeric'})
+      + ' at '
+      + when.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+    document.getElementById('resumePrompt').classList.add('show');
+  }
+}
+
+// ════════════════════════════════════════════
+// START / RESUME
+// ════════════════════════════════════════════
+function startIntake(){
+  // Reset for new session
+  answers = {};
+  curIdx = 0;
+  questions = [...SHARED_START];
+  startTime = Date.now();
+  clearSaved();
+  beginQuestionFlow();
+}
+
+function resumeIntake(){
+  const saved = loadSaved();
+  if(!saved) { startIntake(); return; }
+  answers = saved.answers || {};
+  curIdx = saved.curIdx || 0;
+
+  // Rebuild question list based on saved format
+  questions = [...SHARED_START];
+  if(answers.video_format === 'vlog') {
+    questions = [...SHARED_START, ...VLOG_QUESTIONS];
+  } else if(answers.video_format === 'review') {
+    questions = [...SHARED_START, ...REVIEW_QUESTIONS];
+  }
+
+  startTime = Date.now();
+  beginQuestionFlow();
+}
+
+function discardSaved(){
+  clearSaved();
+  document.getElementById('resumePrompt').classList.remove('show');
+}
+
+function beginQuestionFlow(){
+  document.getElementById('welcome').classList.remove('visible');
+  document.getElementById('qscreen').classList.add('visible');
+  renderQuestion();
+}
+
+// ════════════════════════════════════════════
+// RENDER QUESTION
+// ════════════════════════════════════════════
+function renderQuestion(){
+  const q = questions[curIdx];
+  if(!q){ submitForm(); return; }
+
+  // Progress bar
+  renderProgress();
+
+  // Time-left estimate
+  const remaining = questions.length - curIdx - 1;
+  const minsLeft = Math.max(1, Math.round(remaining * 0.6));
+  document.getElementById('timeLeft').textContent = `~${minsLeft} min left`;
+
+  // Build the card
+  const card = document.getElementById('qCard');
+  card.innerHTML = '';
+
+  // Tag
+  if(q.tag){
+    const tag = document.createElement('div');
+    tag.className = `q-tag tag-${q.tag}`;
+    tag.textContent = q.tagLabel || q.tag;
+    card.appendChild(tag);
+  }
+
+  // Question number
+  const num = document.createElement('div');
+  num.className = 'q-num';
+  num.textContent = `Question ${curIdx + 1} of ${questions.length}`;
+  card.appendChild(num);
+
+  // Question text
+  const text = document.createElement('div');
+  text.className = 'q-text';
+  text.textContent = q.text;
+  card.appendChild(text);
+
+  // Hint
+  if(q.hint){
+    const hint = document.createElement('div');
+    hint.className = 'q-hint';
+    hint.innerHTML = q.hint;
+    card.appendChild(hint);
+  }
+
+  // Answer input
+  card.appendChild(buildAnswerInput(q));
+
+  // Actions
+  const actions = document.createElement('div');
+  actions.className = 'q-actions';
+
+  if(curIdx > 0){
+    const back = document.createElement('button');
+    back.className = 'btn-back';
+    back.textContent = '← Back';
+    back.onclick = goBack;
+    actions.appendChild(back);
+  }
+
+  const cont = document.createElement('button');
+  cont.className = 'btn-continue';
+  cont.textContent = (curIdx === questions.length - 1) ? 'Submit brief →' : 'Continue →';
+  cont.onclick = goNext;
+  actions.appendChild(cont);
+
+  if(q.optional){
+    const skip = document.createElement('button');
+    skip.className = 'btn-skip';
+    skip.textContent = 'Skip';
+    skip.onclick = goNext;
+    actions.appendChild(skip);
+  }
+
+  const hint2 = document.createElement('div');
+  hint2.className = 'enter-hint';
+  hint2.textContent = 'Press Ctrl+Enter to continue';
+  actions.appendChild(hint2);
+
+  card.appendChild(actions);
+
+  // Focus first input
+  setTimeout(()=>{
+    const firstInput = card.querySelector('input, textarea');
+    if(firstInput) firstInput.focus();
+  }, 100);
+}
+
+function buildAnswerInput(q){
+  const wrap = document.createElement('div');
+
+  if(q.type === 'input'){
+    const inp = document.createElement('input');
+    inp.className = 'a-input';
+    inp.type = 'text';
+    inp.placeholder = q.placeholder || '';
+    inp.value = answers[q.fieldId] || '';
+    inp.dataset.field = q.fieldId;
+    inp.oninput = (e)=>{ answers[q.fieldId] = e.target.value; saveProgress(); };
+    wrap.appendChild(inp);
+  }
+  else if(q.type === 'textarea'){
+    const ta = document.createElement('textarea');
+    ta.className = 'a-textarea';
+    ta.placeholder = q.placeholder || '';
+    ta.value = answers[q.fieldId] || '';
+    ta.dataset.field = q.fieldId;
+    if(q.minHeight) ta.style.minHeight = q.minHeight + 'px';
+    ta.oninput = (e)=>{
+      answers[q.fieldId] = e.target.value;
+      autoResize(e.target);
+      saveProgress();
+    };
+    setTimeout(()=>autoResize(ta), 50);
+    wrap.appendChild(ta);
+  }
+  else if(q.type === 'grid2' || q.type === 'grid3'){
+    const grid = document.createElement('div');
+    grid.className = q.type === 'grid3' ? 'a-grid3' : 'a-grid2';
+    q.fields.forEach(f => {
+      const col = document.createElement('div');
+      const label = document.createElement('div');
+      label.className = 'a-label';
+      label.textContent = f.label;
+      col.appendChild(label);
+
+      const inp = document.createElement('input');
+      inp.className = 'a-input';
+      inp.type = 'text';
+      inp.placeholder = f.placeholder || '';
+      inp.value = answers[f.id] || '';
+      inp.dataset.field = f.id;
+      inp.oninput = (e)=>{ answers[f.id] = e.target.value; saveProgress(); };
+      col.appendChild(inp);
+
+      grid.appendChild(col);
+    });
+    wrap.appendChild(grid);
+  }
+  else if(q.type === 'choices'){
+    const grid = document.createElement('div');
+    grid.className = 'choice-grid';
+    q.options.forEach(opt => {
+      const item = document.createElement('label');
+      item.className = 'choice-item';
+      if(answers[q.fieldId] === opt.value) item.classList.add('on');
+
+      const inp = document.createElement('input');
+      inp.type = 'radio';
+      inp.name = q.fieldId;
+      inp.value = opt.value;
+      if(answers[q.fieldId] === opt.value) inp.checked = true;
+      inp.onchange = ()=>{
+        answers[q.fieldId] = opt.value;
+        grid.querySelectorAll('.choice-item').forEach(el=>el.classList.remove('on'));
+        item.classList.add('on');
+        saveProgress();
+      };
+
+      const title = document.createElement('div');
+      title.className = 'choice-title';
+      title.textContent = opt.title;
+
+      const sub = document.createElement('div');
+      sub.className = 'choice-sub';
+      sub.textContent = opt.sub;
+
+      item.appendChild(inp);
+      item.appendChild(title);
+      item.appendChild(sub);
+      grid.appendChild(item);
+    });
+    wrap.appendChild(grid);
+  }
+
+  return wrap;
+}
+
+function autoResize(ta){
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 320) + 'px';
+}
+
+function renderProgress(){
+  const segs = document.getElementById('progSegs');
+  segs.innerHTML = '';
+  for(let i=0; i<questions.length; i++){
+    const seg = document.createElement('div');
+    seg.className = 'prog-seg';
+    if(i < curIdx) seg.classList.add('done');
+    else if(i === curIdx) seg.classList.add('cur');
+    segs.appendChild(seg);
+  }
+  const q = questions[curIdx];
+  document.getElementById('progMeta').textContent = q && q.tagLabel ? q.tagLabel : `Question ${curIdx + 1}`;
+}
+
+// ════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════
+function goNext(){
+  const q = questions[curIdx];
+
+  // Validate required
+  if(q && q.required) {
+    if(q.type === 'choices' && !answers[q.fieldId]) {
+      alert('Please pick one to continue.');
+      return;
+    }
+    if((q.type === 'input' || q.type === 'textarea') && !(answers[q.fieldId] || '').trim()) {
+      alert('This field is required.');
+      return;
+    }
+  }
+
+  // If we just answered the format question, splice in the right path
+  if(q && q.id === 'format') {
+    const chosen = answers.video_format;
+    questions = [...SHARED_START];
+    if(chosen === 'vlog') questions.push(...VLOG_QUESTIONS);
+    else if(chosen === 'review') questions.push(...REVIEW_QUESTIONS);
+  }
+
+  curIdx++;
+  saveProgress();
+
+  if(curIdx >= questions.length){
+    submitForm();
+    return;
+  }
+
+  renderQuestion();
+}
+
+function goBack(){
+  if(curIdx === 0) return;
+  curIdx--;
+  saveProgress();
+  renderQuestion();
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key === 'Enter'){
+    const qScreenVisible = document.getElementById('qscreen').classList.contains('visible');
+    if(qScreenVisible) goNext();
+  }
+});
+
+// ════════════════════════════════════════════
+// SUBMIT
+// ════════════════════════════════════════════
+async function submitForm(){
+  const payload = {
+    form_type: 'client_intake',
+    submitted_at: new Date().toISOString(),
+    ...answers,
+  };
+
+  // Show the done screen immediately — submission happens in background
+  document.getElementById('qscreen').classList.remove('visible');
+  document.getElementById('donescreen').classList.add('visible');
+
+  if(SHEET_WEBHOOK_URL){
+    try {
+      await fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      });
+      clearSaved();
+    } catch(err) {
+      console.error('Submit failed:', err);
+    }
+  } else {
+    // No webhook configured — download as JSON so the data isn't lost
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `client-intake-${(answers.video_name || 'build').replace(/[^a-z0-9-]/gi,'_')}-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    clearSaved();
+  }
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+initWelcome();
+</script>
+</body>
+</html>

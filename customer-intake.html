@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Stereo Chick · Your Build Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0B0E;--ink2:#111318;--ink3:#181A21;--ink4:#1F2129;--ink5:#262830;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#E4E5EC;--muted:#5C5E6A;--label:#8A8C99;
+  --orange:#E8460A;--orange2:#FF5920;--amber:#F0A500;
+  --green:#3A7A35;--green2:#4E9E47;--blue:#4A7EC8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--ink);color:var(--text);font-family:'Barlow',sans-serif;overflow:hidden;}
+body::after{content:'';position:fixed;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .5s;}
+.screen.visible{opacity:1;pointer-events:all;}
+
+/* ── WELCOME ── */
+#welcome{background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:40px 24px;overflow-y:auto;}
+.wl-logo{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:48px;display:flex;align-items:center;gap:12px;}
+.wl-logo::before,.wl-logo::after{content:'';height:1px;width:40px;background:var(--border2);}
+.wl-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;}
+.wl-title{font-family:'Playfair Display',serif;font-size:clamp(36px,6.5vw,72px);font-weight:900;line-height:.95;margin-bottom:24px;letter-spacing:-.02em;}
+.wl-title em{color:var(--orange);font-style:italic;}
+.wl-sub{font-size:14px;color:var(--muted);max-width:480px;margin:0 auto 16px;line-height:1.75;}
+.wl-promise{display:inline-flex;align-items:center;gap:8px;background:rgba(232,70,10,.08);border:1px solid rgba(232,70,10,.18);border-radius:4px;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:40px;}
+.wl-steps{display:flex;gap:24px;margin-bottom:44px;flex-wrap:wrap;justify-content:center;}
+.wl-step{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:140px;}
+.wl-step-num{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--label);}
+.wl-step-text{font-size:11px;color:var(--muted);text-align:center;line-height:1.5;}
+.wl-btn{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--orange);color:#fff;border:none;border-radius:4px;padding:16px 44px;cursor:pointer;transition:all .2s;}
+.wl-btn:hover{background:var(--orange2);transform:translateY(-2px);}
+.wl-resume{display:none;margin-top:18px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.wl-resume.show{display:block;}
+.wl-resume button{background:none;border:none;color:var(--orange);font-family:inherit;font-size:inherit;letter-spacing:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0 4px;}
+.wl-resume button:hover{color:var(--orange2);}
+.wl-footer{margin-top:48px;font-size:11px;color:var(--muted);letter-spacing:.05em;}
+
+/* ── QUESTION SCREEN ── */
+#qscreen{background:var(--ink);flex-direction:column;}
+.topbar{flex-shrink:0;display:flex;align-items:center;padding:16px 28px;border-bottom:1px solid var(--border);gap:16px;}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.topbar-prog{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.prog-segs{display:flex;gap:2px;width:100%;max-width:460px;}
+.prog-seg{flex:1;height:2px;background:var(--ink5);border-radius:2px;transition:background .4s;}
+.prog-seg.done{background:var(--orange);}
+.prog-seg.cur{background:rgba(232,70,10,.4);}
+.prog-meta{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+.topbar-time{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);text-align:right;white-space:nowrap;}
+.topbar-save{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;color:var(--green2);text-transform:uppercase;opacity:0;transition:opacity .3s;}
+.topbar-save.show{opacity:1;}
+
+.q-area{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow-y:auto;}
+.q-card{width:100%;max-width:620px;animation:qIn .4s ease both;}
+@keyframes qIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.q-tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;padding:3px 8px;border-radius:3px;display:inline-block;}
+.tag-you{background:rgba(74,126,200,.12);color:var(--blue);}
+.tag-services{background:rgba(232,70,10,.12);color:var(--orange);}
+.tag-story{background:rgba(155,109,217,.12);color:#9B6DD9;}
+.tag-sensory{background:rgba(240,165,0,.12);color:var(--amber);}
+.tag-final{background:rgba(78,158,71,.12);color:var(--green2);}
+
+.q-num{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.q-text{font-family:'Playfair Display',serif;font-size:clamp(20px,3.2vw,30px);font-weight:700;line-height:1.25;margin-bottom:14px;color:var(--text);}
+.q-hint{font-size:13.5px;color:var(--muted);margin-bottom:22px;line-height:1.75;max-width:540px;}
+.q-hint em{color:var(--label);font-style:italic;}
+
+.a-textarea{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.65;padding:8px 0 12px;resize:none;outline:none;min-height:90px;max-height:280px;transition:border-color .2s;}
+.a-textarea:focus{border-bottom-color:var(--orange);}
+.a-textarea::placeholder{color:var(--muted);}
+.a-input{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Barlow',sans-serif;font-size:17px;padding:8px 0 12px;outline:none;transition:border-color .2s;}
+.a-input:focus{border-bottom-color:var(--orange);}
+.a-input::placeholder{color:var(--muted);}
+.a-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* MULTI-SELECT SERVICE CHECKBOXES */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
+@media(max-width:560px){.svc-grid{grid-template-columns:1fr;}}
+.svc-item{display:flex;align-items:center;gap:10px;background:var(--ink3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none;}
+.svc-item:hover{border-color:rgba(232,70,10,.3);}
+.svc-item.on{border-color:var(--orange);background:rgba(232,70,10,.06);}
+.svc-item input{display:none;}
+.svc-check{width:16px;height:16px;border:1.5px solid var(--muted);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.svc-item.on .svc-check{background:var(--orange);border-color:var(--orange);}
+.svc-check::after{content:'';display:none;width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);}
+.svc-item.on .svc-check::after{display:block;}
+.svc-label{font-size:13.5px;font-weight:500;color:var(--text);line-height:1.3;}
+
+/* PILLS */
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;background:var(--ink3);border:1px solid var(--border2);border-radius:20px;padding:9px 18px;cursor:pointer;transition:all .2s;color:var(--label);user-select:none;}
+.pill:hover{border-color:rgba(232,70,10,.4);color:var(--text);}
+.pill.on{background:rgba(232,70,10,.1);border-color:var(--orange);color:var(--orange);}
+
+/* FILE UPLOAD */
+.upload-zone{border:1px dashed var(--border2);border-radius:6px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s;margin-top:4px;position:relative;}
+.upload-zone:hover{border-color:var(--orange);}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:24px;margin-bottom:8px;}
+.upload-text{font-size:13px;color:var(--muted);}
+.upload-text strong{color:var(--label);}
+.upload-files{margin-top:10px;display:flex;flex-direction:column;gap:5px;}
+.upload-file-item{display:flex;align-items:center;gap:8px;background:var(--ink3);border:1px solid var(--border);border-radius:4px;padding:7px 11px;font-size:12px;color:var(--label);}
+.upload-file-item .rm{margin-left:auto;cursor:pointer;color:var(--muted);font-size:13px;}
+.upload-file-item .rm:hover{color:var(--orange);}
+
+.q-actions{display:flex;align-items:center;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-continue{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;background:var(--orange);color:#fff;border:none;border-radius:4px;padding:13px 26px;cursor:pointer;transition:all .2s;}
+.btn-continue:hover{background:var(--orange2);transform:translateY(-1px);}
+.btn-back{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--border2);color:var(--muted);cursor:pointer;padding:11px 18px;border-radius:4px;transition:all .2s;}
+.btn-back:hover{color:var(--label);border-color:var(--label);}
+.btn-skip{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;transition:color .2s;}
+.btn-skip:hover{color:var(--label);}
+.enter-hint{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:auto;}
+
+/* ── DONE ── */
+#donescreen{background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:40px 24px;}
+.done-mark{width:80px;height:80px;border-radius:50%;border:2px solid var(--orange);background:rgba(232,70,10,.12);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 32px;color:var(--orange);animation:popIn .5s ease both .2s;opacity:0;}
+@keyframes popIn{from{opacity:0;transform:scale(.6);}to{opacity:1;transform:scale(1);}}
+.done-title{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,64px);font-weight:900;line-height:.95;margin-bottom:16px;}
+.done-title em{color:var(--orange);font-style:italic;}
+.done-sub{font-size:14px;color:var(--muted);max-width:400px;margin:0 auto 24px;line-height:1.75;}
+.done-items{margin:0 auto 28px;display:flex;flex-direction:column;gap:8px;max-width:380px;text-align:left;}
+.done-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--label);line-height:1.55;}
+.done-item-dot{color:var(--orange);font-size:16px;flex-shrink:0;margin-top:1px;}
+.done-cta{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- ── WELCOME SCREEN ── -->
+<div class="screen visible" id="welcome">
+  <div class="wl-logo">Car Stereo Chick</div>
+  <div class="wl-eyebrow">Sounds Incredible Mobile · Brookfield, CT</div>
+  <div class="wl-title">Your build<br>starts <em>here.</em></div>
+  <div class="wl-sub">Before we start on your car, we want to hear your story — what this car means to you, why now, and what you're hoping changes when it's done. The more you give us, the more specific the video gets.</div>
+  <div class="wl-promise">⏱ Takes about 3-5 minutes</div>
+  <div class="wl-steps">
+    <div class="wl-step">
+      <div class="wl-step-num">1</div>
+      <div class="wl-step-text">Tell us your first name + what you're getting done</div>
+    </div>
+    <div class="wl-step">
+      <div class="wl-step-num">2</div>
+      <div class="wl-step-text">Tell us the story of you and your car</div>
+    </div>
+    <div class="wl-step">
+      <div class="wl-step-num">3</div>
+      <div class="wl-step-text">Answer a few specific questions about what you're chasing</div>
+    </div>
+    <div class="wl-step">
+      <div class="wl-step-num">4</div>
+      <div class="wl-step-text">Optional — record a 30-sec video of yourself</div>
+    </div>
+  </div>
+  <button class="wl-btn" onclick="startIntake()">Let's go →</button>
+  <div class="wl-resume" id="resumePrompt">
+    Found a saved draft from <span id="resumeWhen"></span>.
+    <button onclick="resumeIntake()">Resume</button>
+    or
+    <button onclick="discardSaved()">start fresh</button>
+  </div>
+  <div class="wl-footer">Sounds Incredible Mobile · Brookfield, CT</div>
+</div>
+
+<!-- ── QUESTION SCREEN ── -->
+<div class="screen" id="qscreen">
+  <div class="topbar">
+    <div class="topbar-brand">Car Stereo Chick</div>
+    <div class="topbar-prog">
+      <div class="prog-segs" id="progSegs"></div>
+      <div class="prog-meta" id="progMeta">Question 1</div>
+    </div>
+    <div class="topbar-save" id="saveIndicator">✓ Saved</div>
+    <div class="topbar-time" id="timeLeft"></div>
+  </div>
+  <div class="q-area">
+    <div class="q-card" id="qCard"></div>
+  </div>
+</div>
+
+<!-- ── DONE SCREEN ── -->
+<div class="screen" id="donescreen">
+  <div class="done-mark">✓</div>
+  <div class="wl-eyebrow">You're all set</div>
+  <div class="done-title">We can't wait<br>to get <em>started.</em></div>
+  <div class="done-sub">Annie has everything she needs. Here's what happens next:</div>
+  <div class="done-items">
+    <div class="done-item"><div class="done-item-dot">→</div><div>Annie reviews everything before your appointment</div></div>
+    <div class="done-item"><div class="done-item-dot">→</div><div>If you said yes to being on camera, we'll have a quick chat beforehand</div></div>
+    <div class="done-item"><div class="done-item-dot">→</div><div>Any questions — reach us at <strong style="color:var(--label)">soundsincrediblemobile.com</strong></div></div>
+  </div>
+  <div class="done-cta">See you soon — Sounds Incredible Mobile</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════
+const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwN3EpUwQpMpByvBM98BLttHX3PmhnfCJFTY7MaFTa3tfDrHlAF0o71G3n2sTlKw_Vl/exec';
+const STORAGE_KEY = 'csc_customer_intake_v2';
+const STORAGE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+// ════════════════════════════════════════════
+// SERVICE CATEGORIES (drives which sensory questions appear)
+// ════════════════════════════════════════════
+const SERVICES = [
+  { id:'audio',       label:'Car audio upgrade' },
+  { id:'custom',      label:'Custom car audio installation' },
+  { id:'carplay',     label:'Apple CarPlay / Android Auto' },
+  { id:'oem',         label:'OEM integration (keep factory look)' },
+  { id:'remote',      label:'Remote car starter' },
+  { id:'heated',      label:'Heated seats' },
+  { id:'dampening',   label:'Sound dampening' },
+  { id:'radar',       label:'Radar & laser' },
+  { id:'safety',      label:'Vehicle safety (cameras, alarms, dash cams)' },
+  { id:'wrangler',    label:'Jeep / Wrangler upgrades' },
+  { id:'other',       label:'Other (we\'ll ask below)' },
+];
+
+// ════════════════════════════════════════════
+// QUESTIONS
+// ════════════════════════════════════════════
+const BASE_QUESTIONS = [
+
+  // ── YOU ──
+  { id:'customer_name', tag:'you', tagLabel:'About you',
+    text:"What's your first name?",
+    hint:"First name is fine.",
+    type:'input', fieldId:'customer_name', placeholder:'e.g. Marcus', required:true },
+
+  { id:'services', tag:'services', tagLabel:"What you're getting done",
+    text:"What's getting done to your car?",
+    hint:"Check everything that applies. We'll tailor the next few questions based on what you pick.",
+    type:'multiselect', fieldId:'services', options:SERVICES, required:true },
+
+  { id:'on_camera', tag:'you', tagLabel:'About you',
+    text:"Want to be on camera for the reveal?",
+    hint:"No pressure either way — your story still helps shape the video even if you'd rather stay off camera.",
+    type:'pills', fieldId:'on_camera', options:['Yes','No','I\'ll decide closer to the date'], required:true },
+
+  // ── STORY (universal) ──
+  { id:'car_story', tag:'story', tagLabel:'Your car',
+    text:"What does this car mean to you?",
+    hint:"Tell us the story. How long have you had it? How'd you end up with it? What does it represent in your life? Don't worry about being polished — just tell us why this car.",
+    type:'textarea', fieldId:'car_story', minHeight:140,
+    placeholder:'e.g. I\'ve had it three years. It was my dad\'s before he passed. It\'s the one thing I have left of him that runs.' },
+
+  { id:'why_now', tag:'story', tagLabel:'Your car',
+    text:"Why now? What's pushing you to finally do this?",
+    hint:"Most people put this off. What made now the moment? A trip coming up, a milestone, finally fed up with something specific, a friend's car that pushed you over the edge?",
+    type:'textarea', fieldId:'why_now', minHeight:120,
+    placeholder:'What pushed you to do this right now and not next year?' },
+
+  { id:'hopes', tag:'story', tagLabel:'Your car',
+    text:"What do you hope changes once it's all done?",
+    hint:"Not just about the install itself — about how this car feels to own. What's the difference you're chasing in daily use?",
+    type:'textarea', fieldId:'hopes', minHeight:120,
+    placeholder:'The difference you\'re after — in feeling, not specs.' },
+];
+
+// SENSORY QUESTIONS — one per service. Only the ones tied to checked services appear.
+const SENSORY_QUESTIONS = {
+  audio: {
+    id:'sensory_audio', tag:'sensory', tagLabel:'Audio',
+    text:"What's the first song you want to hear when this is all done?",
+    hint:"Why that song? What part of it are you waiting for? Get specific — not just \"rock\" but Steely Dan deep cuts. Not just \"rap\" but early Kanye. The song and the moment in it.",
+    type:'textarea', fieldId:'sensory_audio', minHeight:120,
+    placeholder:'The song + why + the specific moment in it you\'re waiting for.' },
+
+  custom: {
+    id:'sensory_audio', tag:'sensory', tagLabel:'Custom audio',
+    text:"What's the first song you want to hear when this is all done?",
+    hint:"Why that song? What part of it are you waiting for? The song and the specific moment in it.",
+    type:'textarea', fieldId:'sensory_audio', minHeight:120,
+    placeholder:'The song + the moment in it you\'re waiting for.' },
+
+  carplay: {
+    id:'sensory_carplay', tag:'sensory', tagLabel:'CarPlay / Android Auto',
+    text:"What's the first thing you're going to do with this once it works?",
+    hint:"Maps to a regular place? Texts on the road? Spotify? Hands-free calls? Describe a specific moment you're picturing.",
+    type:'textarea', fieldId:'sensory_carplay', minHeight:120,
+    placeholder:'A specific moment you\'re picturing.' },
+
+  oem: {
+    id:'sensory_oem', tag:'sensory', tagLabel:'OEM integration',
+    text:"Most people upgrade everything visible. You're keeping the factory look. Why does that matter to you?",
+    hint:"Originality? Resale value? A stealth thing? A personal value system about preservation?",
+    type:'textarea', fieldId:'sensory_oem', minHeight:120,
+    placeholder:'The reason the factory look matters to you.' },
+
+  remote: {
+    id:'sensory_remote', tag:'sensory', tagLabel:'Remote starter',
+    text:"Describe the morning this changes.",
+    hint:"Cold mornings, summer mornings, ever forgotten and walked back outside in your pajamas? What's the moment you'll first appreciate it?",
+    type:'textarea', fieldId:'sensory_remote', minHeight:120,
+    placeholder:'A specific morning — the one this changes.' },
+
+  heated: {
+    id:'sensory_heated', tag:'sensory', tagLabel:'Heated seats',
+    text:"Describe the moment you'll first notice this.",
+    hint:"Getting in after work? A specific commute? Someone in the passenger seat? What's the feeling you're after?",
+    type:'textarea', fieldId:'sensory_heated', minHeight:120,
+    placeholder:'The specific moment you\'ll first feel it.' },
+
+  dampening: {
+    id:'sensory_dampening', tag:'sensory', tagLabel:'Sound dampening',
+    text:"What's the sound in your car right now that drives you nuts?",
+    hint:"Road noise? Rattles? Something you've stopped noticing because you got used to it? What specifically do you want gone?",
+    type:'textarea', fieldId:'sensory_dampening', minHeight:120,
+    placeholder:'The specific sound you want gone.' },
+
+  radar: {
+    id:'sensory_radar', tag:'sensory', tagLabel:'Radar & laser',
+    text:"Where are you driving when this matters?",
+    hint:"A specific stretch of road? A trip you take regularly? A speed limit drop you keep getting caught in? Tell us the story.",
+    type:'textarea', fieldId:'sensory_radar', minHeight:120,
+    placeholder:'A specific stretch of road or trip.' },
+
+  safety: {
+    id:'sensory_safety', tag:'sensory', tagLabel:'Vehicle safety',
+    text:"What's the moment you wished you'd had this already?",
+    hint:"A close call, a parking lot bump, something that happened to someone you know, a place you park that worries you?",
+    type:'textarea', fieldId:'sensory_safety', minHeight:120,
+    placeholder:'The moment you wished you\'d already had it.' },
+
+  wrangler: {
+    id:'sensory_wrangler', tag:'sensory', tagLabel:'Wrangler upgrades',
+    text:"What kind of driving is this Jeep doing? What's the build you're chasing?",
+    hint:"Daily, weekend, off-road, beach? What's the moment you'll know it's right?",
+    type:'textarea', fieldId:'sensory_wrangler', minHeight:120,
+    placeholder:'The kind of driving + the moment you\'ll know it\'s right.' },
+
+  other: {
+    id:'sensory_other', tag:'sensory', tagLabel:'Other',
+    text:"What are you getting done, and what are you hoping changes?",
+    hint:"You picked \"Other\" — tell us what you're getting done and what the difference is going to feel like for you.",
+    type:'textarea', fieldId:'sensory_other', minHeight:140,
+    placeholder:'What you\'re getting done + what the difference will feel like.' },
+};
+
+// FINAL QUESTION — optional video upload
+const FINAL_QUESTIONS = [
+  { id:'customer_video', tag:'final', tagLabel:'One last thing',
+    text:"Want to record a 30-second video of yourself talking about this?",
+    hint:"Totally optional — but Annie loves hearing it in your voice. Just hold up your phone and answer one of the questions above out loud. Doesn't have to be polished.",
+    type:'file', fieldId:'customer_video', optional:true,
+    accept:'video/*,audio/*' },
+];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let questions = [];
+let curIdx = 0;
+let answers = {};
+let uploadedFiles = {};
+let saveTimer = null;
+
+// ════════════════════════════════════════════
+// LOCAL STORAGE (30-day progress save)
+// ════════════════════════════════════════════
+function loadSaved(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(Date.now() - (parsed.savedAt || 0) > STORAGE_MAX_AGE_MS) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch(e) { return null; }
+}
+
+function saveProgress(){
+  try {
+    const payload = {
+      answers,
+      curIdx,
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    flashSaveIndicator();
+  } catch(e) {}
+}
+
+function clearSaved(){
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
+function flashSaveIndicator(){
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ el.classList.remove('show'); }, 1500);
+}
+
+function initWelcome(){
+  const saved = loadSaved();
+  if(saved && Object.keys(saved.answers || {}).length > 0){
+    const when = new Date(saved.savedAt);
+    document.getElementById('resumeWhen').textContent =
+      when.toLocaleDateString(undefined, {month:'short', day:'numeric'})
+      + ' at '
+      + when.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+    document.getElementById('resumePrompt').classList.add('show');
+  }
+}
+
+// ════════════════════════════════════════════
+// QUESTION FLOW
+// ════════════════════════════════════════════
+function buildQuestionList(){
+  // Start with base questions
+  let qs = [...BASE_QUESTIONS];
+
+  // After base, splice in sensory questions for each checked service
+  const selectedServices = answers.services || [];
+  selectedServices.forEach(svcId => {
+    if(SENSORY_QUESTIONS[svcId]) qs.push(SENSORY_QUESTIONS[svcId]);
+  });
+
+  // Final upload
+  qs.push(...FINAL_QUESTIONS);
+
+  return qs;
+}
+
+function startIntake(){
+  answers = {};
+  uploadedFiles = {};
+  curIdx = 0;
+  questions = buildQuestionList();
+  clearSaved();
+  beginQuestionFlow();
+}
+
+function resumeIntake(){
+  const saved = loadSaved();
+  if(!saved) { startIntake(); return; }
+  answers = saved.answers || {};
+  uploadedFiles = {};
+  curIdx = saved.curIdx || 0;
+  questions = buildQuestionList();
+  beginQuestionFlow();
+}
+
+function discardSaved(){
+  clearSaved();
+  document.getElementById('resumePrompt').classList.remove('show');
+}
+
+function beginQuestionFlow(){
+  document.getElementById('welcome').classList.remove('visible');
+  document.getElementById('qscreen').classList.add('visible');
+  renderQuestion();
+}
+
+// ════════════════════════════════════════════
+// RENDER QUESTION
+// ════════════════════════════════════════════
+function renderQuestion(){
+  const q = questions[curIdx];
+  if(!q){ submitForm(); return; }
+
+  renderProgress();
+
+  const remaining = questions.length - curIdx - 1;
+  const minsLeft = Math.max(1, Math.round(remaining * 0.4));
+  document.getElementById('timeLeft').textContent = `~${minsLeft} min left`;
+
+  const card = document.getElementById('qCard');
+  card.innerHTML = '';
+
+  if(q.tag){
+    const tag = document.createElement('div');
+    tag.className = `q-tag tag-${q.tag}`;
+    tag.textContent = q.tagLabel || q.tag;
+    card.appendChild(tag);
+  }
+
+  const num = document.createElement('div');
+  num.className = 'q-num';
+  num.textContent = `Question ${curIdx + 1} of ${questions.length}`;
+  card.appendChild(num);
+
+  const text = document.createElement('div');
+  text.className = 'q-text';
+  text.textContent = q.text;
+  card.appendChild(text);
+
+  if(q.hint){
+    const hint = document.createElement('div');
+    hint.className = 'q-hint';
+    hint.innerHTML = q.hint;
+    card.appendChild(hint);
+  }
+
+  card.appendChild(buildAnswerInput(q));
+
+  const actions = document.createElement('div');
+  actions.className = 'q-actions';
+
+  if(curIdx > 0){
+    const back = document.createElement('button');
+    back.className = 'btn-back';
+    back.textContent = '← Back';
+    back.onclick = goBack;
+    actions.appendChild(back);
+  }
+
+  const cont = document.createElement('button');
+  cont.className = 'btn-continue';
+  cont.textContent = (curIdx === questions.length - 1) ? 'Submit →' : 'Continue →';
+  cont.onclick = goNext;
+  actions.appendChild(cont);
+
+  if(q.optional){
+    const skip = document.createElement('button');
+    skip.className = 'btn-skip';
+    skip.textContent = 'Skip';
+    skip.onclick = goNext;
+    actions.appendChild(skip);
+  }
+
+  const hint2 = document.createElement('div');
+  hint2.className = 'enter-hint';
+  hint2.textContent = 'Press Ctrl+Enter to continue';
+  actions.appendChild(hint2);
+
+  card.appendChild(actions);
+
+  setTimeout(()=>{
+    const firstInput = card.querySelector('input:not([type=file]), textarea');
+    if(firstInput) firstInput.focus();
+  }, 100);
+}
+
+function buildAnswerInput(q){
+  const wrap = document.createElement('div');
+
+  if(q.type === 'input'){
+    const inp = document.createElement('input');
+    inp.className = 'a-input';
+    inp.type = 'text';
+    inp.placeholder = q.placeholder || '';
+    inp.value = answers[q.fieldId] || '';
+    inp.oninput = (e)=>{ answers[q.fieldId] = e.target.value; saveProgress(); };
+    wrap.appendChild(inp);
+  }
+  else if(q.type === 'textarea'){
+    const ta = document.createElement('textarea');
+    ta.className = 'a-textarea';
+    ta.placeholder = q.placeholder || '';
+    ta.value = answers[q.fieldId] || '';
+    if(q.minHeight) ta.style.minHeight = q.minHeight + 'px';
+    ta.oninput = (e)=>{
+      answers[q.fieldId] = e.target.value;
+      autoResize(e.target);
+      saveProgress();
+    };
+    setTimeout(()=>autoResize(ta), 50);
+    wrap.appendChild(ta);
+  }
+  else if(q.type === 'pills'){
+    const row = document.createElement('div');
+    row.className = 'pill-row';
+    q.options.forEach(opt => {
+      const pill = document.createElement('div');
+      pill.className = 'pill';
+      pill.textContent = opt;
+      if(answers[q.fieldId] === opt) pill.classList.add('on');
+      pill.onclick = ()=>{
+        answers[q.fieldId] = opt;
+        row.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+        pill.classList.add('on');
+        saveProgress();
+      };
+      row.appendChild(pill);
+    });
+    wrap.appendChild(row);
+  }
+  else if(q.type === 'multiselect'){
+    const grid = document.createElement('div');
+    grid.className = 'svc-grid';
+    const selected = new Set(answers[q.fieldId] || []);
+
+    q.options.forEach(opt => {
+      const item = document.createElement('label');
+      item.className = 'svc-item';
+      if(selected.has(opt.id)) item.classList.add('on');
+
+      const inp = document.createElement('input');
+      inp.type = 'checkbox';
+      inp.value = opt.id;
+      inp.checked = selected.has(opt.id);
+      inp.onchange = (e)=>{
+        if(e.target.checked){ selected.add(opt.id); item.classList.add('on'); }
+        else { selected.delete(opt.id); item.classList.remove('on'); }
+        answers[q.fieldId] = Array.from(selected);
+        saveProgress();
+      };
+
+      const check = document.createElement('div');
+      check.className = 'svc-check';
+
+      const label = document.createElement('div');
+      label.className = 'svc-label';
+      label.textContent = opt.label;
+
+      item.appendChild(inp);
+      item.appendChild(check);
+      item.appendChild(label);
+      grid.appendChild(item);
+    });
+    wrap.appendChild(grid);
+  }
+  else if(q.type === 'file'){
+    const zone = document.createElement('div');
+    zone.className = 'upload-zone';
+    zone.innerHTML =
+      '<div class="upload-icon">📹</div>' +
+      '<div class="upload-text"><strong>Tap to choose a video or audio file</strong><br>or drag one here · 30 sec is plenty · totally optional</div>';
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = q.accept || '*';
+    inp.onchange = (e)=>{
+      const file = e.target.files[0];
+      if(file){
+        uploadedFiles[q.fieldId] = file;
+        renderFiles();
+      }
+    };
+    zone.appendChild(inp);
+    wrap.appendChild(zone);
+
+    const filesList = document.createElement('div');
+    filesList.className = 'upload-files';
+    filesList.id = 'uploadedFilesList';
+    wrap.appendChild(filesList);
+
+    function renderFiles(){
+      filesList.innerHTML = '';
+      const f = uploadedFiles[q.fieldId];
+      if(f){
+        const item = document.createElement('div');
+        item.className = 'upload-file-item';
+        const size = (f.size / 1024 / 1024).toFixed(1);
+        item.innerHTML = `<div>${f.name}</div><div style="margin-left:auto;font-size:10px;color:var(--muted);">${size} MB</div><div class="rm" onclick="removeFile('${q.fieldId}')">✕</div>`;
+        filesList.appendChild(item);
+      }
+    }
+    renderFiles();
+  }
+
+  return wrap;
+}
+
+function removeFile(fieldId){
+  delete uploadedFiles[fieldId];
+  renderQuestion();
+}
+window.removeFile = removeFile;
+
+function autoResize(ta){
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 280) + 'px';
+}
+
+function renderProgress(){
+  const segs = document.getElementById('progSegs');
+  segs.innerHTML = '';
+  for(let i=0; i<questions.length; i++){
+    const seg = document.createElement('div');
+    seg.className = 'prog-seg';
+    if(i < curIdx) seg.classList.add('done');
+    else if(i === curIdx) seg.classList.add('cur');
+    segs.appendChild(seg);
+  }
+  const q = questions[curIdx];
+  document.getElementById('progMeta').textContent = q && q.tagLabel ? q.tagLabel : `Question ${curIdx + 1}`;
+}
+
+// ════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════
+function goNext(){
+  const q = questions[curIdx];
+
+  // Validate required
+  if(q && q.required) {
+    if(q.type === 'multiselect' && (!answers[q.fieldId] || answers[q.fieldId].length === 0)) {
+      alert('Pick at least one option to continue.');
+      return;
+    }
+    if(q.type === 'pills' && !answers[q.fieldId]) {
+      alert('Pick one to continue.');
+      return;
+    }
+    if((q.type === 'input' || q.type === 'textarea') && !(answers[q.fieldId] || '').trim()) {
+      alert('This field is required.');
+      return;
+    }
+  }
+
+  // If we just answered services, rebuild the question list
+  if(q && q.id === 'services') {
+    const oldLen = questions.length;
+    questions = buildQuestionList();
+  }
+
+  curIdx++;
+  saveProgress();
+
+  if(curIdx >= questions.length){
+    submitForm();
+    return;
+  }
+
+  renderQuestion();
+}
+
+function goBack(){
+  if(curIdx === 0) return;
+  curIdx--;
+  saveProgress();
+  renderQuestion();
+}
+
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key === 'Enter'){
+    const qScreenVisible = document.getElementById('qscreen').classList.contains('visible');
+    if(qScreenVisible) goNext();
+  }
+});
+
+// ════════════════════════════════════════════
+// SUBMIT
+// ════════════════════════════════════════════
+async function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitForm(){
+  // Encode any uploaded files
+  const fileData = [];
+  for(const [fieldId, file] of Object.entries(uploadedFiles)){
+    try {
+      const b64 = await fileToBase64(file);
+      fileData.push({ field: fieldId, name: file.name, type: file.type, data: b64 });
+    } catch(e) { console.error('File encode failed:', e); }
+  }
+
+  const payload = {
+    form_type: 'customer_intake',
+    submitted_at: new Date().toISOString(),
+    ...answers,
+    customer_files: fileData,
+  };
+
+  // Show done screen immediately
+  document.getElementById('qscreen').classList.remove('visible');
+  document.getElementById('donescreen').classList.add('visible');
+
+  if(SHEET_WEBHOOK_URL){
+    try {
+      await fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      });
+      clearSaved();
+    } catch(err) {
+      console.error('Submit failed:', err);
+    }
+  } else {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `customer-intake-${(answers.customer_name || 'customer').replace(/[^a-z0-9-]/gi,'_')}-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    clearSaved();
+  }
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+initWelcome();
+</script>
+</body>
+</html>
