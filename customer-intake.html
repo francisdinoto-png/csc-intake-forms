@@ -30,6 +30,7 @@ body::after{content:'';position:fixed;inset:0;opacity:.025;background-image:url(
 .wl-title em{color:var(--orange);font-style:italic;}
 .wl-sub{font-size:14px;color:var(--muted);max-width:480px;margin:0 auto 16px;line-height:1.75;}
 .wl-promise{display:inline-flex;align-items:center;gap:8px;background:rgba(232,70,10,.08);border:1px solid rgba(232,70,10,.18);border-radius:4px;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:40px;}
+.wl-vidbadge{display:none;align-items:center;gap:8px;background:rgba(74,126,200,.10);border:1px solid rgba(74,126,200,.22);border-radius:4px;padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:18px;}
 .wl-steps{display:flex;gap:24px;margin-bottom:44px;flex-wrap:wrap;justify-content:center;}
 .wl-step{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:140px;}
 .wl-step-num{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--label);}
@@ -139,6 +140,7 @@ body::after{content:'';position:fixed;inset:0;opacity:.025;background-image:url(
 <div class="screen visible" id="welcome">
   <div class="wl-logo">Car Stereo Chick</div>
   <div class="wl-eyebrow">Sounds Incredible Mobile · Brookfield, CT</div>
+  <div class="wl-vidbadge" id="videoBadge"></div>
   <div class="wl-title">Your build<br>starts <em>here.</em></div>
   <div class="wl-sub">Before we start on your car, we want to hear your story — what this car means to you, why now, and what you're hoping changes when it's done. The more you give us, the more specific the video gets.</div>
   <div class="wl-promise">⏱ Takes about 3-5 minutes</div>
@@ -412,6 +414,17 @@ function initWelcome(){
       + ' at '
       + when.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
     document.getElementById('resumePrompt').classList.add('show');
+  }
+
+  // If we have a video name from the URL, show it as a quiet confirmation
+  const urlParams = new URLSearchParams(window.location.search);
+  const videoName = urlParams.get('video');
+  if(videoName && videoName.trim()){
+    const badge = document.getElementById('videoBadge');
+    if(badge){
+      badge.textContent = 'For: ' + videoName.trim();
+      badge.style.display = 'inline-flex';
+    }
   }
 }
 
@@ -764,9 +777,15 @@ async function submitForm(){
     } catch(e) { console.error('File encode failed:', e); }
   }
 
+  // Read video name from URL parameter (?video=Stinger+Horizon+10)
+  // This is how the customer's submission gets matched to the right build tab
+  const urlParams = new URLSearchParams(window.location.search);
+  const videoName = urlParams.get('video') || '';
+
   const payload = {
     form_type: 'customer_intake',
     submitted_at: new Date().toISOString(),
+    video_name: videoName,
     ...answers,
     customer_files: fileData,
   };
